@@ -1,0 +1,11 @@
+import 'dotenv/config';
+import express from 'express';
+import authRoutes from './routes/auth';
+import empRoutes from './routes/employees';
+const app = express();
+app.use(express.json());
+app.use('/auth', authRoutes);
+app.use('/employees', empRoutes);
+app.get('/', (req,res)=>res.send({ok:true}));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, ()=>console.log('Server running', PORT));
