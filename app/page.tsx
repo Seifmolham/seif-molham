@@ -16,8 +16,6 @@ import { SelfServicePortal } from "@/components/self-service-portal"
 import { DocumentManagement } from "@/components/document-management"
 import { HRLetters } from "@/components/hr-letters"
 import { AnalyticsDashboard } from "@/components/analytics-dashboard"
-
-// New modules
 import { ATSManagement } from "@/components/ats-management"
 import { CompensationManagement } from "@/components/compensation-management"
 import { BenefitsManagement } from "@/components/benefits-management"
@@ -29,7 +27,6 @@ import { CompanyFeed } from "@/components/company-feed"
 import { Recognition } from "@/components/recognition"
 import { ChangeOfStatus } from "@/components/change-of-status"
 import { WorkflowMaker } from "@/components/workflow-maker"
-
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
 import {
@@ -61,33 +58,12 @@ import {
 type UserRole = "Employee" | "Manager" | "HR" | "Admin"
 
 type ActiveModule =
-  | "dashboard"
-  | "company-feed"
-  | "employees"
-  | "departments"
-  | "org-chart"
-  | "ats"
-  | "recruitment"
-  | "onboarding"
-  | "offboarding"
-  | "career"
-  | "performance"
-  | "learning"
-  | "workforce-planning"
-  | "attendance"
-  | "leave"
-  | "payroll"
-  | "compensation"
-  | "benefits"
-  | "surveys"
-  | "recognition"
-  | "status-changes"
-  | "workflow-maker"
-  | "self-service"
-  | "documents"
-  | "letters"
-  | "analytics"
-  | "settings"
+  | "dashboard" | "company-feed" | "employees" | "departments" | "org-chart"
+  | "ats" | "recruitment" | "onboarding" | "offboarding" | "career"
+  | "performance" | "learning" | "workforce-planning" | "attendance" | "leave"
+  | "payroll" | "compensation" | "benefits" | "surveys" | "recognition"
+  | "status-changes" | "workflow-maker" | "self-service" | "documents"
+  | "letters" | "analytics" | "settings"
 
 function ThemeToggle() {
   const { theme, setTheme } = useTheme()
@@ -111,6 +87,65 @@ function ThemeToggle() {
   )
 }
 
+const NAV_GROUPS = [
+  {
+    label: "Overview",
+    items: [
+      { id: "dashboard", label: "Org Insights", Icon: LayoutDashboard },
+      { id: "company-feed", label: "Company Feed", Icon: Bell },
+      { id: "analytics", label: "Analytics", Icon: BarChart3 },
+    ],
+  },
+  {
+    label: "People",
+    items: [
+      { id: "employees", label: "Employees", Icon: Users },
+      { id: "departments", label: "Departments", Icon: Building2 },
+      { id: "org-chart", label: "Org Chart", Icon: GitBranch },
+    ],
+  },
+  {
+    label: "Talent",
+    items: [
+      { id: "ats", label: "ATS / Recruitment", Icon: UserCog },
+      { id: "onboarding", label: "Onboarding", Icon: User },
+      { id: "offboarding", label: "Offboarding", Icon: User },
+      { id: "career", label: "Career Development", Icon: TrendingUp },
+    ],
+  },
+  {
+    label: "Work",
+    items: [
+      { id: "performance", label: "Performance", Icon: Star },
+      { id: "learning", label: "Learning & Dev", Icon: Award },
+      { id: "workforce-planning", label: "Workforce Planning", Icon: Users },
+      { id: "attendance", label: "Attendance", Icon: Clock },
+      { id: "leave", label: "Leave", Icon: CalendarDays },
+    ],
+  },
+  {
+    label: "Compensation",
+    items: [
+      { id: "payroll", label: "Payroll", Icon: CreditCard },
+      { id: "compensation", label: "Compensation", Icon: TrendingUp },
+      { id: "benefits", label: "Benefits", Icon: Award },
+    ],
+  },
+  {
+    label: "Culture & Admin",
+    items: [
+      { id: "surveys", label: "Surveys", Icon: FileText },
+      { id: "recognition", label: "Recognition", Icon: Star },
+      { id: "status-changes", label: "Status Changes", Icon: GitBranch },
+      { id: "workflow-maker", label: "Workflows", Icon: Settings },
+      { id: "documents", label: "Documents", Icon: FileText },
+      { id: "letters", label: "HR Letters", Icon: FileText },
+      { id: "self-service", label: "Self Service", Icon: User },
+      { id: "settings", label: "Settings", Icon: Settings },
+    ],
+  },
+]
+
 function MobileNav({
   activeModule,
   onNavigate,
@@ -120,65 +155,6 @@ function MobileNav({
 }) {
   const [open, setOpen] = useState(false)
 
-  const navGroups = [
-    {
-      label: "Overview",
-      items: [
-        { id: "dashboard", label: "Org Insights", icon: LayoutDashboard },
-        { id: "company-feed", label: "Company Feed", icon: Bell },
-        { id: "analytics", label: "Analytics", icon: BarChart3 },
-      ],
-    },
-    {
-      label: "People",
-      items: [
-        { id: "employees", label: "Employees", icon: Users },
-        { id: "departments", label: "Departments", icon: Building2 },
-        { id: "org-chart", label: "Org Chart", icon: GitBranch },
-      ],
-    },
-    {
-      label: "Talent",
-      items: [
-        { id: "ats", label: "ATS / Recruitment", icon: UserCog },
-        { id: "onboarding", label: "Onboarding", icon: User },
-        { id: "offboarding", label: "Offboarding", icon: User },
-        { id: "career", label: "Career Development", icon: TrendingUp },
-      ],
-    },
-    {
-      label: "Work",
-      items: [
-        { id: "performance", label: "Performance", icon: Star },
-        { id: "learning", label: "Learning & Dev", icon: Award },
-        { id: "workforce-planning", label: "Workforce Planning", icon: Users },
-        { id: "attendance", label: "Attendance", icon: Clock },
-        { id: "leave", label: "Leave", icon: CalendarDays },
-      ],
-    },
-    {
-      label: "Compensation",
-      items: [
-        { id: "payroll", label: "Payroll", icon: CreditCard },
-        { id: "compensation", label: "Compensation", icon: TrendingUp },
-        { id: "benefits", label: "Benefits", icon: Award },
-      ],
-    },
-    {
-      label: "Culture & Admin",
-      items: [
-        { id: "surveys", label: "Surveys", icon: FileText },
-        { id: "recognition", label: "Recognition", icon: Star },
-        { id: "status-changes", label: "Status Changes", icon: GitBranch },
-        { id: "workflow-maker", label: "Workflows", icon: Settings },
-        { id: "documents", label: "Documents", icon: FileText },
-        { id: "letters", label: "HR Letters", icon: FileText },
-        { id: "self-service", label: "Self Service", icon: User },
-        { id: "settings", label: "Settings", icon: Settings },
-      ],
-    },
-  ]
-
   const handleNav = (id: string) => {
     onNavigate(id)
     setOpen(false)
@@ -187,55 +163,117 @@ function MobileNav({
   return (
     <>
       <button
-        onClick={() => setOpen(true)}
-        className="md:hidden flex items-center justify-center h-10 w-10 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-        aria-label="Open navigation"
         type="button"
+        onClick={() => setOpen(true)}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: 40,
+          height: 40,
+          borderRadius: 12,
+          background: "#f1f5f9",
+          border: "none",
+          cursor: "pointer",
+          flexShrink: 0,
+        }}
+        className="md:hidden"
+        aria-label="Open navigation"
       >
-        <Menu className="h-5 w-5 text-slate-700 dark:text-slate-300" />
+        <Menu style={{ width: 20, height: 20, color: "#334155" }} />
       </button>
 
       {open && (
-        <div className="fixed inset-0 z-[9999] bg-white dark:bg-slate-900 overflow-y-auto md:hidden">
-          <div className="sticky top-0 flex items-center justify-between px-5 py-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 z-10">
-            <span className="text-lg font-bold text-slate-900 dark:text-slate-100">Navigation</span>
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 9999,
+            display: "flex",
+            flexDirection: "column",
+            background: "#ffffff",
+          }}
+          className="md:hidden"
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: "16px 20px",
+              borderBottom: "1px solid #e2e8f0",
+              flexShrink: 0,
+            }}
+          >
+            <span style={{ fontSize: 18, fontWeight: 700, color: "#0f172a" }}>Menu</span>
             <button
-              onClick={() => setOpen(false)}
-              className="flex items-center justify-center h-10 w-10 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-              aria-label="Close navigation"
               type="button"
+              onClick={() => setOpen(false)}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: 40,
+                height: 40,
+                borderRadius: 12,
+                background: "#f1f5f9",
+                border: "none",
+                cursor: "pointer",
+              }}
+              aria-label="Close navigation"
             >
-              <X className="h-5 w-5 text-slate-700 dark:text-slate-300" />
+              <X style={{ width: 20, height: 20, color: "#334155" }} />
             </button>
           </div>
-          <div className="px-4 py-4 space-y-6 pb-12">
-            {navGroups.map((group) => (
-              <div key={group.label}>
-                <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2 px-2">
+
+          <div style={{ flex: 1, overflowY: "auto", padding: "16px 16px 48px" }}>
+            {NAV_GROUPS.map((group) => (
+              <div key={group.label} style={{ marginBottom: 24 }}>
+                <p
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 600,
+                    color: "#94a3b8",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.06em",
+                    marginBottom: 6,
+                    paddingLeft: 8,
+                  }}
+                >
                   {group.label}
                 </p>
-                <div className="space-y-1">
-                  {group.items.map((item) => {
-                    const Icon = item.icon
-                    const isActive = activeModule === (item.id as ActiveModule)
-                    return (
-                      <button
-                        key={item.id}
-                        type="button"
-                        onClick={() => handleNav(item.id)}
-                        className={
-                          "w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-colors " +
-                          (isActive
-                            ? "bg-primary text-white"
-                            : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800")
-                        }
-                      >
-                        <Icon className="h-5 w-5 flex-shrink-0" />
-                        {item.label}
-                      </button>
-                    )
-                  })}
-                </div>
+                {group.items.map(({ id, label, Icon }) => {
+                  const isActive = activeModule === id
+                  return (
+                    <button
+                      key={id}
+                      type="button"
+                      onClick={() => handleNav(id)}
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 12,
+                        padding: "11px 12px",
+                        borderRadius: 12,
+                        marginBottom: 3,
+                        background: isActive ? "hsl(var(--primary))" : "transparent",
+                        color: isActive ? "#ffffff" : "#334155",
+                        fontSize: 14,
+                        fontWeight: 500,
+                        border: "none",
+                        cursor: "pointer",
+                        textAlign: "left",
+                      }}
+                    >
+                      <Icon style={{ width: 18, height: 18, flexShrink: 0 }} />
+                      {label}
+                    </button>
+                  )
+                })}
               </div>
             ))}
           </div>
@@ -288,58 +326,32 @@ export default function HRISApp() {
 
   const renderActiveModule = () => {
     switch (activeModule) {
-      case "dashboard":
-        return <Dashboard userRole={userRole} onNavigate={handleNavigate} />
-      case "company-feed":
-        return <CompanyFeed />
-      case "employees":
-        return <EmployeeManagement userRole={userRole} />
-      case "departments":
-        return <DepartmentManagement />
-      case "org-chart":
-        return <OrgChart />
-      case "ats":
-        return <ATSManagement />
-      case "recruitment":
-        return <ATSManagement />
-      case "onboarding":
-        return <OnboardingManagement />
-      case "offboarding":
-        return <OffboardingManagement />
-      case "career":
-        return <CareerDevelopment />
-      case "performance":
-        return <PerformanceManagement />
-      case "learning":
-        return <LearningManagement />
-      case "workforce-planning":
-        return <WorkforcePlanning />
-      case "attendance":
-        return <AttendanceManagement />
-      case "leave":
-        return <LeaveManagement />
-      case "payroll":
-        return <PayrollManagement />
-      case "compensation":
-        return <CompensationManagement />
-      case "benefits":
-        return <BenefitsManagement />
-      case "surveys":
-        return <SurveysEngagement />
-      case "recognition":
-        return <Recognition />
-      case "status-changes":
-        return <ChangeOfStatus />
-      case "workflow-maker":
-        return <WorkflowMaker />
-      case "self-service":
-        return <SelfServicePortal />
-      case "documents":
-        return <DocumentManagement />
-      case "letters":
-        return <HRLetters />
-      case "analytics":
-        return <AnalyticsDashboard />
+      case "dashboard": return <Dashboard userRole={userRole} onNavigate={handleNavigate} />
+      case "company-feed": return <CompanyFeed />
+      case "employees": return <EmployeeManagement userRole={userRole} />
+      case "departments": return <DepartmentManagement />
+      case "org-chart": return <OrgChart />
+      case "ats": return <ATSManagement />
+      case "recruitment": return <ATSManagement />
+      case "onboarding": return <OnboardingManagement />
+      case "offboarding": return <OffboardingManagement />
+      case "career": return <CareerDevelopment />
+      case "performance": return <PerformanceManagement />
+      case "learning": return <LearningManagement />
+      case "workforce-planning": return <WorkforcePlanning />
+      case "attendance": return <AttendanceManagement />
+      case "leave": return <LeaveManagement />
+      case "payroll": return <PayrollManagement />
+      case "compensation": return <CompensationManagement />
+      case "benefits": return <BenefitsManagement />
+      case "surveys": return <SurveysEngagement />
+      case "recognition": return <Recognition />
+      case "status-changes": return <ChangeOfStatus />
+      case "workflow-maker": return <WorkflowMaker />
+      case "self-service": return <SelfServicePortal />
+      case "documents": return <DocumentManagement />
+      case "letters": return <HRLetters />
+      case "analytics": return <AnalyticsDashboard />
       case "settings":
         return (
           <div className="space-y-8">
@@ -354,23 +366,18 @@ export default function HRISApp() {
                   </div>
                   <div>
                     <h1 className="text-3xl font-bold mb-2">System Settings</h1>
-                    <p className="text-secondary-foreground/80 text-lg">
-                      Configure system preferences and administrative settings
-                    </p>
+                    <p className="text-secondary-foreground/80 text-lg">Configure system preferences and administrative settings</p>
                   </div>
                 </div>
               </div>
             </div>
             <div className="text-center py-12">
               <h3 className="text-lg font-semibold mb-2">System Configuration Panel</h3>
-              <p className="text-muted-foreground mb-6">
-                Advanced system configuration with role-based access, security settings, and integration management.
-              </p>
+              <p className="text-muted-foreground mb-6">Advanced system configuration with role-based access, security settings, and integration management.</p>
             </div>
           </div>
         )
-      default:
-        return <Dashboard userRole={userRole} onNavigate={handleNavigate} />
+      default: return <Dashboard userRole={userRole} onNavigate={handleNavigate} />
     }
   }
 
@@ -389,10 +396,7 @@ export default function HRISApp() {
                   <BreadcrumbItem className="hidden md:block">
                     <BreadcrumbLink
                       href="#"
-                      onClick={(e) => {
-                        e.preventDefault()
-                        setActiveModule("dashboard")
-                      }}
+                      onClick={(e) => { e.preventDefault(); setActiveModule("dashboard") }}
                       className="text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary transition-colors"
                     >
                       Seif Molham HRIS
@@ -406,15 +410,10 @@ export default function HRISApp() {
                   </BreadcrumbItem>
                 </BreadcrumbList>
               </Breadcrumb>
-
               <div className="ml-auto flex items-center gap-2">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="flex items-center gap-2 rounded-lg border-slate-200 dark:border-slate-700 text-sm font-medium hover:border-primary/50 hover:text-primary transition-colors"
-                    >
+                    <Button variant="outline" size="sm" className="flex items-center gap-2 rounded-lg border-slate-200 dark:border-slate-700 text-sm font-medium hover:border-primary/50 hover:text-primary transition-colors">
                       {userRole === "Admin" && <ShieldCheck className="h-4 w-4 text-primary" />}
                       {userRole === "HR" && <UserCog className="h-4 w-4 text-primary" />}
                       {userRole === "Manager" && <Users className="h-4 w-4 text-primary" />}
@@ -426,60 +425,30 @@ export default function HRISApp() {
                   <DropdownMenuContent align="end" className="w-52">
                     <DropdownMenuLabel className="text-xs text-slate-500 font-normal">Switch View</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem
-                      onClick={() => setUserRole("Admin")}
-                      className={userRole === "Admin" ? "bg-primary/10 text-primary font-medium" : ""}
-                    >
-                      <ShieldCheck className="h-4 w-4 mr-2" />
-                      Admin
-                      <span className="ml-auto text-xs text-slate-400">Full access</span>
+                    <DropdownMenuItem onClick={() => setUserRole("Admin")} className={userRole === "Admin" ? "bg-primary/10 text-primary font-medium" : ""}>
+                      <ShieldCheck className="h-4 w-4 mr-2" />Admin<span className="ml-auto text-xs text-slate-400">Full access</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => setUserRole("HR")}
-                      className={userRole === "HR" ? "bg-primary/10 text-primary font-medium" : ""}
-                    >
-                      <UserCog className="h-4 w-4 mr-2" />
-                      HR
-                      <span className="ml-auto text-xs text-slate-400">HR modules</span>
+                    <DropdownMenuItem onClick={() => setUserRole("HR")} className={userRole === "HR" ? "bg-primary/10 text-primary font-medium" : ""}>
+                      <UserCog className="h-4 w-4 mr-2" />HR<span className="ml-auto text-xs text-slate-400">HR modules</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => setUserRole("Manager")}
-                      className={userRole === "Manager" ? "bg-primary/10 text-primary font-medium" : ""}
-                    >
-                      <Users className="h-4 w-4 mr-2" />
-                      Manager
-                      <span className="ml-auto text-xs text-slate-400">Team view</span>
+                    <DropdownMenuItem onClick={() => setUserRole("Manager")} className={userRole === "Manager" ? "bg-primary/10 text-primary font-medium" : ""}>
+                      <Users className="h-4 w-4 mr-2" />Manager<span className="ml-auto text-xs text-slate-400">Team view</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => { setUserRole("Employee"); setActiveModule("dashboard") }}
-                      className={userRole === "Employee" ? "bg-primary/10 text-primary font-medium" : ""}
-                    >
-                      <User className="h-4 w-4 mr-2" />
-                      Employee
-                      <span className="ml-auto text-xs text-slate-400">Self-service</span>
+                    <DropdownMenuItem onClick={() => { setUserRole("Employee"); setActiveModule("dashboard") }} className={userRole === "Employee" ? "bg-primary/10 text-primary font-medium" : ""}>
+                      <User className="h-4 w-4 mr-2" />Employee<span className="ml-auto text-xs text-slate-400">Self-service</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-
                 <ThemeToggle />
-
                 <Button variant="ghost" size="sm" className="relative hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">
                   <Bell className="h-4 w-4 text-slate-600 dark:text-slate-400" />
-                  <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-secondary text-white text-xs p-0 flex items-center justify-center">
-                    3
-                  </Badge>
+                  <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-secondary text-white text-xs p-0 flex items-center justify-center">3</Badge>
                 </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"
-                  onClick={() => setActiveModule("settings")}
-                >
+                <Button variant="ghost" size="sm" className="hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg" onClick={() => setActiveModule("settings")}>
                   <Settings className="h-4 w-4 text-slate-600 dark:text-slate-400" />
                 </Button>
               </div>
             </header>
-
             <main className="flex-1 overflow-auto">
               <div className="p-6">{renderActiveModule()}</div>
             </main>
