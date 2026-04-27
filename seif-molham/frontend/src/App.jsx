@@ -1,6 +1,0 @@
-import React, {useState, useEffect} from 'react';
-const API = import.meta.env.VITE_API_URL || '/';
-function Login({onLogin}){const [email,setEmail]=useState('');const [pw,setPw]=useState('');async function s(e){e.preventDefault();const res=await fetch(API+'auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pw})});const data=await res.json();if(data.token){localStorage.setItem('token',data.token);onLogin(data.role);}else alert('fail');}
-return <div className='card'><h2>Login</h2><form onSubmit={s}><input placeholder='email' value={email} onChange={e=>setEmail(e.target.value)}/><input placeholder='password' type='password' value={pw} onChange={e=>setPw(e.target.value)}/><button>Login</button></form></div>}
-function Directory(){const [emps,setEmps]=useState([]);useEffect(()=>{(async ()=>{const res=await fetch((API+'employees'));if(res.ok)setEmps(await res.json());})();},[]);return <div><h3>Directory</h3><div className='grid'>{emps.map(e=><div key={e.id} className='card'>{e.name}<div className='muted'>{e.position}</div></div>)}</div></div>}
-export default function App(){if(!localStorage.getItem('token')) return <div className='wrap'><Login onLogin={()=>{}}/></div>;return <div className='wrap'><header className='top'><h1>Seif Molham</h1></header><main><Directory/></main></div>}
