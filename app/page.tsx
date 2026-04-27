@@ -41,7 +41,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { ThemeProvider } from "@/components/theme-provider"
-import { Bell, Settings, ChevronDown, ShieldCheck, UserCog, Users, User, Sun, Moon } from "lucide-react"
+import { Bell, Settings, ChevronDown, ShieldCheck, UserCog, Users, User, Sun, Moon, LayoutDashboard, Clock, CalendarDays, UserCircle2, BarChart3 } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -247,7 +247,7 @@ export default function HRISApp() {
           <HRISSidebar onNavigate={handleNavigate} activeModule={activeModule} userRole={userRole} />
           <SidebarInset className="flex-1 flex flex-col">
             <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-2 border-b border-slate-200/50 dark:border-slate-700/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl px-4">
-              <SidebarTrigger className="-ml-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors" />
+              <SidebarTrigger className="-ml-1 h-10 w-10 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center justify-center shadow-sm" />
               <Separator orientation="vertical" className="mr-2 h-4 bg-slate-300 dark:bg-slate-600" />
               <Breadcrumb>
                 <BreadcrumbList>
@@ -350,9 +350,36 @@ export default function HRISApp() {
               </div>
             </header>
 
-            <main className="flex-1 overflow-auto">
+            <main className="flex-1 overflow-auto pb-16 md:pb-0">
               <div className="p-6">{renderActiveModule()}</div>
             </main>
+
+            {/* ── Mobile Bottom Navigation ──────────────────────────────── */}
+            <nav className="fixed bottom-0 left-0 right-0 z-50 flex md:hidden border-t border-slate-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl">
+              {[
+                { icon: LayoutDashboard, label: "Home",       module: "dashboard"  },
+                { icon: Users,           label: "People",     module: "employees"  },
+                { icon: Clock,           label: "Attendance", module: "attendance" },
+                { icon: CalendarDays,    label: "Leave",      module: "leave"      },
+                { icon: BarChart3,       label: "Analytics",  module: "analytics"  },
+              ].map(({ icon: Icon, label, module }) => (
+                <button
+                  key={module}
+                  onClick={() => setActiveModule(module as any)}
+                  className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-2 text-xs font-medium transition-colors ${
+                    activeModule === module
+                      ? "text-teal-600 dark:text-teal-400"
+                      : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
+                  }`}
+                >
+                  <Icon className="w-5 h-5" />
+                  <span>{label}</span>
+                  {activeModule === module && (
+                    <span className="absolute top-0 w-8 h-0.5 rounded-full bg-teal-500" />
+                  )}
+                </button>
+              ))}
+            </nav>
           </SidebarInset>
         </div>
       </SidebarProvider>
