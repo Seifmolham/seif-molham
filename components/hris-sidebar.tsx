@@ -1,15 +1,6 @@
 "use client"
 import {
   Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -23,34 +14,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
-  LayoutDashboard,
-  Users,
-  Building2,
-  MapIcon as Sitemap,
-  GraduationCap,
-  Target,
-  BookOpen,
-  Clock,
-  Calendar,
-  DollarSign,
-  User,
-  FileText,
-  Mail,
-  BarChart3,
-  Settings,
-  ChevronDown,
-  Bell,
-  LogOut,
-  UserCog,
-  UserCheck,
-  Heart,
-  Globe,
-  Award,
-  TrendingUp,
-  Layers,
-  MessageSquare,
-  UserMinus,
-  Briefcase,
+  LayoutDashboard, Users, Building2, MapIcon as Sitemap, GraduationCap, Target, BookOpen,
+  Clock, Calendar, DollarSign, User, FileText, Mail, BarChart3, Settings, ChevronDown,
+  Bell, LogOut, UserCog, UserCheck, Heart, Globe, Award, TrendingUp, Layers, MessageSquare,
+  UserMinus, Briefcase,
 } from "lucide-react"
 
 type UserRole = "Employee" | "Manager" | "HR" | "Admin"
@@ -121,78 +88,93 @@ const navigationItems = [
       { title: "Analytics", icon: BarChart3, key: "analytics", badge: null, roles: ["HR", "Admin"] },
     ],
   },
+  {
+    title: "Recognition",
+    items: [
+      { title: "Recognition", icon: Award, key: "recognition", badge: null, roles: ["Employee", "Manager", "HR", "Admin"] },
+    ],
+  },
 ]
 
-export function HRISSidebar({ onNavigate, activeModule, userRole = "Admin" }: HRISSidebarProps) {
-  const roleBadgeColor: Record<UserRole, string> = {
-    Admin: "bg-red-100 text-red-700",
-    HR: "bg-blue-100 text-blue-700",
-    Manager: "bg-amber-100 text-amber-700",
-    Employee: "bg-green-100 text-green-700",
-  }
+const roleBadgeColor: Record<UserRole, string> = {
+  Admin: "bg-red-100 text-red-700",
+  HR: "bg-blue-100 text-blue-700",
+  Manager: "bg-amber-100 text-amber-700",
+  Employee: "bg-green-100 text-green-700",
+}
 
+export function HRISSidebarContent({ onNavigate, activeModule, userRole = "Admin" }: HRISSidebarProps) {
   return (
-    <Sidebar className="border-r-0 bg-white dark:bg-slate-900">
-      <SidebarHeader className="border-b border-slate-200 dark:border-slate-700 p-4">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: "#00C5B3" }}>
-            <span className="text-white font-bold text-sm">V</span>
+    <div style={{ display: "flex", flexDirection: "column", height: "100%", background: "var(--sidebar-bg, #ffffff)", overflow: "hidden" }} className="dark:[--sidebar-bg:#0f172a]">
+      {/* Header */}
+      <div style={{ borderBottom: "1px solid #e2e8f0", padding: "16px", flexShrink: 0 }} className="dark:border-slate-700">
+        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+          <div style={{ width: 32, height: 32, borderRadius: 8, background: "#00C5B3", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            <span style={{ color: "#fff", fontWeight: 700, fontSize: 14 }}>V</span>
           </div>
-          <div className="flex-1 min-w-0">
-            <h2 className="font-semibold text-slate-900 dark:text-slate-100 truncate">Valu HRIS</h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400 truncate">People Platform</p>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <p style={{ fontWeight: 600, fontSize: 14, margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }} className="text-slate-900 dark:text-slate-100">Valu HRIS</p>
+            <p style={{ fontSize: 12, margin: 0 }} className="text-slate-500 dark:text-slate-400">People Platform</p>
           </div>
         </div>
-        <div className="mt-3 flex items-center gap-2">
-          <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${roleBadgeColor[userRole]}`}>
-            {userRole}
-          </span>
-          <span className="text-xs text-slate-400">Seif Molham</span>
+        <div style={{ marginTop: 12, display: "flex", alignItems: "center", gap: 8 }}>
+          <span className={"text-xs font-semibold px-2.5 py-1 rounded-full " + roleBadgeColor[userRole]}>{userRole}</span>
+          <span style={{ fontSize: 12 }} className="text-slate-400">Seif Molham</span>
         </div>
-      </SidebarHeader>
+      </div>
 
-      <SidebarContent className="px-2 py-4">
+      {/* Nav */}
+      <div style={{ flex: 1, overflowY: "auto", padding: "12px 8px" }}>
         {navigationItems.map((group) => {
-          const visibleItems = group.items.filter((item) => item.roles.includes(userRole))
-          if (visibleItems.length === 0) return null
+          const visible = group.items.filter((item) => item.roles.includes(userRole))
+          if (visible.length === 0) return null
           return (
-            <SidebarGroup key={group.title} className="mb-2">
-              <SidebarGroupContent>
-                <SidebarMenu className="space-y-1">
-                  {visibleItems.map((item) => (
-                    <SidebarMenuItem key={item.key}>
-                      <SidebarMenuButton
-                        onClick={() => onNavigate(item.key)}
-                        isActive={activeModule === item.key}
-                        className={`w-full justify-start px-3 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                          activeModule === item.key
-                            ? "bg-primary text-white shadow-md"
-                            : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
-                        }`}
-                      >
-                        <item.icon className="w-4 h-4 mr-3 flex-shrink-0" />
-                        <span className="truncate">{item.title}</span>
-                        {item.badge && (
-                          <Badge
-                            variant="secondary"
-                            className={`ml-auto text-xs px-1.5 py-0.5 ${
-                              activeModule === item.key ? "bg-white/20 text-white" : "bg-secondary text-white"
-                            }`}
-                          >
-                            {item.badge}
-                          </Badge>
-                        )}
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  ))}
-                </SidebarMenu>
-              </SidebarGroupContent>
-            </SidebarGroup>
+            <div key={group.title} style={{ marginBottom: 16 }}>
+              <p style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.06em", margin: "0 0 6px 12px" }} className="text-slate-400 dark:text-slate-500">
+                {group.title}
+              </p>
+              {visible.map((item) => {
+                const Icon = item.icon
+                const active = activeModule === item.key
+                return (
+                  <button
+                    key={item.key}
+                    type="button"
+                    onClick={() => onNavigate(item.key)}
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      padding: "8px 12px",
+                      borderRadius: 8,
+                      marginBottom: 2,
+                      background: active ? "#00C5B3" : "transparent",
+                      color: active ? "#ffffff" : undefined,
+                      fontSize: 14,
+                      fontWeight: 500,
+                      border: "none",
+                      cursor: "pointer",
+                      textAlign: "left",
+                    }}
+                    className={active ? "" : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"}
+                  >
+                    <Icon style={{ width: 16, height: 16, marginRight: 12, flexShrink: 0 }} />
+                    <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.title}</span>
+                    {item.badge && (
+                      <Badge variant="secondary" className={"ml-auto text-xs px-1.5 py-0.5 flex-shrink-0 " + (active ? "bg-white/20 text-white" : "bg-secondary text-white")}>
+                        {item.badge}
+                      </Badge>
+                    )}
+                  </button>
+                )
+              })}
+            </div>
           )
         })}
-      </SidebarContent>
+      </div>
 
-      <SidebarFooter className="border-t border-slate-200 dark:border-slate-700 p-4">
+      {/* Footer */}
+      <div style={{ borderTop: "1px solid #e2e8f0", padding: 16, flexShrink: 0 }} className="dark:border-slate-700">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="w-full justify-start p-2 h-auto">
@@ -204,30 +186,26 @@ export function HRISSidebar({ onNavigate, activeModule, userRole = "Admin" }: HR
                 <p className="text-sm font-medium text-slate-900 dark:text-slate-100 truncate">Seif Molham</p>
                 <p className="text-xs text-slate-500 dark:text-slate-400 truncate">Administrator</p>
               </div>
-              <ChevronDown className="w-4 h-4 text-slate-500" />
+              <ChevronDown className="w-4 h-4 text-slate-500 flex-shrink-0" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuItem>
-              <UserCog className="w-4 h-4 mr-2" />
-              Profile Settings
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Bell className="w-4 h-4 mr-2" />
-              Notifications
-            </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onNavigate("settings")}>
-              <Settings className="w-4 h-4 mr-2" />
-              System Settings
-            </DropdownMenuItem>
+            <DropdownMenuItem><UserCog className="w-4 h-4 mr-2" />Profile Settings</DropdownMenuItem>
+            <DropdownMenuItem><Bell className="w-4 h-4 mr-2" />Notifications</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onNavigate("settings")}><Settings className="w-4 h-4 mr-2" />System Settings</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem className="text-red-600">
-              <LogOut className="w-4 h-4 mr-2" />
-              Sign Out
-            </DropdownMenuItem>
+            <DropdownMenuItem className="text-red-600"><LogOut className="w-4 h-4 mr-2" />Sign Out</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      </SidebarFooter>
+      </div>
+    </div>
+  )
+}
+
+export function HRISSidebar({ onNavigate, activeModule, userRole = "Admin" }: HRISSidebarProps) {
+  return (
+    <Sidebar className="border-r-0 bg-white dark:bg-slate-900">
+      <HRISSidebarContent onNavigate={onNavigate} activeModule={activeModule} userRole={userRole} />
       <SidebarRail />
     </Sidebar>
   )
