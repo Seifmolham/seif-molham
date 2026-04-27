@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { HRISSidebar } from "@/components/hris-sidebar"
+import { HRISSidebar, HRISSidebarContent } from "@/components/hris-sidebar"
 import { Dashboard } from "@/components/dashboard"
 import { EmployeeManagement } from "@/components/employee-management"
 import { LeaveManagement } from "@/components/leave-management"
@@ -27,34 +27,23 @@ import { CompanyFeed } from "@/components/company-feed"
 import { Recognition } from "@/components/recognition"
 import { ChangeOfStatus } from "@/components/change-of-status"
 import { WorkflowMaker } from "@/components/workflow-maker"
-import { SidebarInset, SidebarProvider, useSidebar } from "@/components/ui/sidebar"
+import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { Sheet, SheetContent } from "@/components/ui/sheet"
 import { Separator } from "@/components/ui/separator"
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
+  Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { ThemeProvider } from "@/components/theme-provider"
-import {
-  Bell, Settings, ChevronDown, ShieldCheck, UserCog, Users, User, Sun, Moon, Menu,
-} from "lucide-react"
+import { Bell, Settings, ChevronDown, ShieldCheck, UserCog, Users, User, Sun, Moon, Menu } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
+  DropdownMenu, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator,
+  DropdownMenuItem, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
 type UserRole = "Employee" | "Manager" | "HR" | "Admin"
-
 type ActiveModule =
   | "dashboard" | "company-feed" | "employees" | "departments" | "org-chart"
   | "ats" | "recruitment" | "onboarding" | "offboarding" | "career"
@@ -74,82 +63,44 @@ function ThemeToggle() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-36">
-        <DropdownMenuItem onClick={() => setTheme("light")} className={theme === "light" ? "bg-primary/10 text-primary font-medium" : ""}>
-          <Sun className="h-4 w-4 mr-2" />Light
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("dark")} className={theme === "dark" ? "bg-primary/10 text-primary font-medium" : ""}>
-          <Moon className="h-4 w-4 mr-2" />Dark
-        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("light")} className={theme === "light" ? "bg-primary/10 text-primary font-medium" : ""}><Sun className="h-4 w-4 mr-2" />Light</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("dark")} className={theme === "dark" ? "bg-primary/10 text-primary font-medium" : ""}><Moon className="h-4 w-4 mr-2" />Dark</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
-}
-
-function MobileMenuButton() {
-  const { toggleSidebar } = useSidebar()
-  return (
-    <button
-      type="button"
-      onClick={toggleSidebar}
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        width: 40,
-        height: 40,
-        borderRadius: 10,
-        background: "#f1f5f9",
-        border: "none",
-        cursor: "pointer",
-        flexShrink: 0,
-      }}
-      className="md:hidden"
-      aria-label="Open sidebar"
-    >
-      <Menu style={{ width: 20, height: 20, color: "#334155" }} />
-    </button>
   )
 }
 
 export default function HRISApp() {
   const [userRole, setUserRole] = useState<UserRole>("Admin")
   const [activeModule, setActiveModule] = useState<ActiveModule>("dashboard")
+  const [mobileOpen, setMobileOpen] = useState(false)
 
   const getModuleTitle = (module: ActiveModule) => {
     const titles: Record<ActiveModule, string> = {
-      dashboard: "Organization Insights",
-      "company-feed": "Company Feed",
-      employees: "Employee Management",
-      departments: "Department Management",
-      "org-chart": "Organization Chart",
-      ats: "Applicant Tracking System",
-      recruitment: "Recruitment",
-      onboarding: "Onboarding",
-      offboarding: "Offboarding",
-      career: "Career Development & Goals",
-      performance: "Performance Management",
-      learning: "Learning & Development",
-      "workforce-planning": "Workforce Planning",
-      attendance: "Attendance Management",
-      leave: "Leave Management",
-      payroll: "Payroll Management",
-      compensation: "Compensation & Equity",
-      benefits: "Benefits Management",
-      surveys: "Surveys & Engagement",
-      recognition: "Recognition & Shoutouts",
-      "status-changes": "Status Changes",
-      "workflow-maker": "Workflow Maker",
-      "self-service": "Employee Self Service",
-      documents: "Document Management",
-      letters: "HR Letters",
-      analytics: "Analytics & Reports",
-      settings: "System Settings",
+      dashboard: "Organization Insights", "company-feed": "Company Feed",
+      employees: "Employee Management", departments: "Department Management",
+      "org-chart": "Organization Chart", ats: "Applicant Tracking System",
+      recruitment: "Recruitment", onboarding: "Onboarding", offboarding: "Offboarding",
+      career: "Career Development & Goals", performance: "Performance Management",
+      learning: "Learning & Development", "workforce-planning": "Workforce Planning",
+      attendance: "Attendance Management", leave: "Leave Management",
+      payroll: "Payroll Management", compensation: "Compensation & Equity",
+      benefits: "Benefits Management", surveys: "Surveys & Engagement",
+      recognition: "Recognition & Shoutouts", "status-changes": "Status Changes",
+      "workflow-maker": "Workflow Maker", "self-service": "Employee Self Service",
+      documents: "Document Management", letters: "HR Letters",
+      analytics: "Analytics & Reports", settings: "System Settings",
     }
     return titles[module] ?? module
   }
 
   const handleNavigate = (module: string) => {
     setActiveModule(module as ActiveModule)
+  }
+
+  const handleMobileNavigate = (module: string) => {
+    setActiveModule(module as ActiveModule)
+    setMobileOpen(false)
   }
 
   const renderActiveModule = () => {
@@ -189,9 +140,7 @@ export default function HRISApp() {
               <div className="absolute top-0 left-0 w-16 h-16 bg-white/10 rounded-full translate-x-4 translate-y-4" />
               <div className="relative">
                 <div className="flex items-center gap-3 mb-4">
-                  <div className="p-3 rounded-2xl bg-white/20 backdrop-blur-sm">
-                    <Settings className="h-8 w-8" />
-                  </div>
+                  <div className="p-3 rounded-2xl bg-white/20 backdrop-blur-sm"><Settings className="h-8 w-8" /></div>
                   <div>
                     <h1 className="text-3xl font-bold mb-2">System Settings</h1>
                     <p className="text-secondary-foreground/80 text-lg">Configure system preferences and administrative settings</p>
@@ -212,28 +161,43 @@ export default function HRISApp() {
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <SidebarProvider>
+        {/* Mobile Sheet — controlled by plain useState, zero isMobile dependency */}
+        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+          <SheetContent side="left" className="p-0 w-72 border-r-0" style={{ padding: 0 }}>
+            <HRISSidebarContent
+              onNavigate={handleMobileNavigate}
+              activeModule={activeModule}
+              userRole={userRole}
+            />
+          </SheetContent>
+        </Sheet>
+
         <div className="flex min-h-screen w-full bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
           <HRISSidebar onNavigate={handleNavigate} activeModule={activeModule} userRole={userRole} />
           <SidebarInset className="flex-1 flex flex-col">
             <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-2 border-b border-slate-200/50 dark:border-slate-700/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl px-4">
-              <MobileMenuButton />
+              {/* Desktop sidebar trigger */}
+              <SidebarTrigger className="-ml-1 h-9 w-9 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors hidden md:flex items-center justify-center" />
+              {/* Mobile hamburger — opens Sheet directly via useState */}
+              <button
+                type="button"
+                onClick={() => setMobileOpen(true)}
+                className="md:hidden flex items-center justify-center h-9 w-9 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                aria-label="Open menu"
+              >
+                <Menu className="h-5 w-5 text-slate-700 dark:text-slate-300" />
+              </button>
               <Separator orientation="vertical" className="mr-2 h-4 bg-slate-300 dark:bg-slate-600" />
               <Breadcrumb>
                 <BreadcrumbList>
                   <BreadcrumbItem className="hidden md:block">
-                    <BreadcrumbLink
-                      href="#"
-                      onClick={(e) => { e.preventDefault(); setActiveModule("dashboard") }}
-                      className="text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary transition-colors"
-                    >
+                    <BreadcrumbLink href="#" onClick={(e) => { e.preventDefault(); setActiveModule("dashboard") }} className="text-slate-600 hover:text-primary dark:text-slate-400 dark:hover:text-primary transition-colors">
                       Seif Molham HRIS
                     </BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator className="hidden md:block text-slate-400" />
                   <BreadcrumbItem>
-                    <BreadcrumbPage className="text-slate-900 dark:text-slate-100 font-medium">
-                      {getModuleTitle(activeModule)}
-                    </BreadcrumbPage>
+                    <BreadcrumbPage className="text-slate-900 dark:text-slate-100 font-medium">{getModuleTitle(activeModule)}</BreadcrumbPage>
                   </BreadcrumbItem>
                 </BreadcrumbList>
               </Breadcrumb>
@@ -252,18 +216,10 @@ export default function HRISApp() {
                   <DropdownMenuContent align="end" className="w-52">
                     <DropdownMenuLabel className="text-xs text-slate-500 font-normal">Switch View</DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={() => setUserRole("Admin")} className={userRole === "Admin" ? "bg-primary/10 text-primary font-medium" : ""}>
-                      <ShieldCheck className="h-4 w-4 mr-2" />Admin<span className="ml-auto text-xs text-slate-400">Full access</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setUserRole("HR")} className={userRole === "HR" ? "bg-primary/10 text-primary font-medium" : ""}>
-                      <UserCog className="h-4 w-4 mr-2" />HR<span className="ml-auto text-xs text-slate-400">HR modules</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setUserRole("Manager")} className={userRole === "Manager" ? "bg-primary/10 text-primary font-medium" : ""}>
-                      <Users className="h-4 w-4 mr-2" />Manager<span className="ml-auto text-xs text-slate-400">Team view</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => { setUserRole("Employee"); setActiveModule("dashboard") }} className={userRole === "Employee" ? "bg-primary/10 text-primary font-medium" : ""}>
-                      <User className="h-4 w-4 mr-2" />Employee<span className="ml-auto text-xs text-slate-400">Self-service</span>
-                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setUserRole("Admin")} className={userRole === "Admin" ? "bg-primary/10 text-primary font-medium" : ""}><ShieldCheck className="h-4 w-4 mr-2" />Admin<span className="ml-auto text-xs text-slate-400">Full access</span></DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setUserRole("HR")} className={userRole === "HR" ? "bg-primary/10 text-primary font-medium" : ""}><UserCog className="h-4 w-4 mr-2" />HR<span className="ml-auto text-xs text-slate-400">HR modules</span></DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setUserRole("Manager")} className={userRole === "Manager" ? "bg-primary/10 text-primary font-medium" : ""}><Users className="h-4 w-4 mr-2" />Manager<span className="ml-auto text-xs text-slate-400">Team view</span></DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => { setUserRole("Employee"); setActiveModule("dashboard") }} className={userRole === "Employee" ? "bg-primary/10 text-primary font-medium" : ""}><User className="h-4 w-4 mr-2" />Employee<span className="ml-auto text-xs text-slate-400">Self-service</span></DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
                 <ThemeToggle />
