@@ -27,7 +27,7 @@ import { CompanyFeed } from "@/components/company-feed"
 import { Recognition } from "@/components/recognition"
 import { ChangeOfStatus } from "@/components/change-of-status"
 import { WorkflowMaker } from "@/components/workflow-maker"
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import { SidebarInset, SidebarProvider, useSidebar } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
 import {
   Breadcrumb,
@@ -40,8 +40,6 @@ import {
 import { ThemeProvider } from "@/components/theme-provider"
 import {
   Bell, Settings, ChevronDown, ShieldCheck, UserCog, Users, User, Sun, Moon, Menu,
-  LayoutDashboard, Clock, CalendarDays, BarChart3, X, Building2, FileText,
-  CreditCard, Award, TrendingUp, GitBranch, Star,
 } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
@@ -87,199 +85,29 @@ function ThemeToggle() {
   )
 }
 
-const NAV_GROUPS = [
-  {
-    label: "Overview",
-    items: [
-      { id: "dashboard", label: "Org Insights", Icon: LayoutDashboard },
-      { id: "company-feed", label: "Company Feed", Icon: Bell },
-      { id: "analytics", label: "Analytics", Icon: BarChart3 },
-    ],
-  },
-  {
-    label: "People",
-    items: [
-      { id: "employees", label: "Employees", Icon: Users },
-      { id: "departments", label: "Departments", Icon: Building2 },
-      { id: "org-chart", label: "Org Chart", Icon: GitBranch },
-    ],
-  },
-  {
-    label: "Talent",
-    items: [
-      { id: "ats", label: "ATS / Recruitment", Icon: UserCog },
-      { id: "onboarding", label: "Onboarding", Icon: User },
-      { id: "offboarding", label: "Offboarding", Icon: User },
-      { id: "career", label: "Career Development", Icon: TrendingUp },
-    ],
-  },
-  {
-    label: "Work",
-    items: [
-      { id: "performance", label: "Performance", Icon: Star },
-      { id: "learning", label: "Learning & Dev", Icon: Award },
-      { id: "workforce-planning", label: "Workforce Planning", Icon: Users },
-      { id: "attendance", label: "Attendance", Icon: Clock },
-      { id: "leave", label: "Leave", Icon: CalendarDays },
-    ],
-  },
-  {
-    label: "Compensation",
-    items: [
-      { id: "payroll", label: "Payroll", Icon: CreditCard },
-      { id: "compensation", label: "Compensation", Icon: TrendingUp },
-      { id: "benefits", label: "Benefits", Icon: Award },
-    ],
-  },
-  {
-    label: "Culture & Admin",
-    items: [
-      { id: "surveys", label: "Surveys", Icon: FileText },
-      { id: "recognition", label: "Recognition", Icon: Star },
-      { id: "status-changes", label: "Status Changes", Icon: GitBranch },
-      { id: "workflow-maker", label: "Workflows", Icon: Settings },
-      { id: "documents", label: "Documents", Icon: FileText },
-      { id: "letters", label: "HR Letters", Icon: FileText },
-      { id: "self-service", label: "Self Service", Icon: User },
-      { id: "settings", label: "Settings", Icon: Settings },
-    ],
-  },
-]
-
-function MobileNav({
-  activeModule,
-  onNavigate,
-}: {
-  activeModule: ActiveModule
-  onNavigate: (module: string) => void
-}) {
-  const [open, setOpen] = useState(false)
-
-  const handleNav = (id: string) => {
-    onNavigate(id)
-    setOpen(false)
-  }
-
+function MobileMenuButton() {
+  const { toggleSidebar } = useSidebar()
   return (
-    <>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          width: 40,
-          height: 40,
-          borderRadius: 12,
-          background: "#f1f5f9",
-          border: "none",
-          cursor: "pointer",
-          flexShrink: 0,
-        }}
-        className="md:hidden"
-        aria-label="Open navigation"
-      >
-        <Menu style={{ width: 20, height: 20, color: "#334155" }} />
-      </button>
-
-      {open && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 9999,
-            display: "flex",
-            flexDirection: "column",
-            background: "#ffffff",
-          }}
-          className="md:hidden"
-        >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              padding: "16px 20px",
-              borderBottom: "1px solid #e2e8f0",
-              flexShrink: 0,
-            }}
-          >
-            <span style={{ fontSize: 18, fontWeight: 700, color: "#0f172a" }}>Menu</span>
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                width: 40,
-                height: 40,
-                borderRadius: 12,
-                background: "#f1f5f9",
-                border: "none",
-                cursor: "pointer",
-              }}
-              aria-label="Close navigation"
-            >
-              <X style={{ width: 20, height: 20, color: "#334155" }} />
-            </button>
-          </div>
-
-          <div style={{ flex: 1, overflowY: "auto", padding: "16px 16px 48px" }}>
-            {NAV_GROUPS.map((group) => (
-              <div key={group.label} style={{ marginBottom: 24 }}>
-                <p
-                  style={{
-                    fontSize: 11,
-                    fontWeight: 600,
-                    color: "#94a3b8",
-                    textTransform: "uppercase",
-                    letterSpacing: "0.06em",
-                    marginBottom: 6,
-                    paddingLeft: 8,
-                  }}
-                >
-                  {group.label}
-                </p>
-                {group.items.map(({ id, label, Icon }) => {
-                  const isActive = activeModule === id
-                  return (
-                    <button
-                      key={id}
-                      type="button"
-                      onClick={() => handleNav(id)}
-                      style={{
-                        width: "100%",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 12,
-                        padding: "11px 12px",
-                        borderRadius: 12,
-                        marginBottom: 3,
-                        background: isActive ? "hsl(var(--primary))" : "transparent",
-                        color: isActive ? "#ffffff" : "#334155",
-                        fontSize: 14,
-                        fontWeight: 500,
-                        border: "none",
-                        cursor: "pointer",
-                        textAlign: "left",
-                      }}
-                    >
-                      <Icon style={{ width: 18, height: 18, flexShrink: 0 }} />
-                      {label}
-                    </button>
-                  )
-                })}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </>
+    <button
+      type="button"
+      onClick={toggleSidebar}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: 40,
+        height: 40,
+        borderRadius: 10,
+        background: "#f1f5f9",
+        border: "none",
+        cursor: "pointer",
+        flexShrink: 0,
+      }}
+      className="md:hidden"
+      aria-label="Open sidebar"
+    >
+      <Menu style={{ width: 20, height: 20, color: "#334155" }} />
+    </button>
   )
 }
 
@@ -388,8 +216,7 @@ export default function HRISApp() {
           <HRISSidebar onNavigate={handleNavigate} activeModule={activeModule} userRole={userRole} />
           <SidebarInset className="flex-1 flex flex-col">
             <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-2 border-b border-slate-200/50 dark:border-slate-700/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl px-4">
-              <SidebarTrigger className="-ml-1 h-9 w-9 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors hidden md:flex items-center justify-center" />
-              <MobileNav activeModule={activeModule} onNavigate={handleNavigate} />
+              <MobileMenuButton />
               <Separator orientation="vertical" className="mr-2 h-4 bg-slate-300 dark:bg-slate-600" />
               <Breadcrumb>
                 <BreadcrumbList>
