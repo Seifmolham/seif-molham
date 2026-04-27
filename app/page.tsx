@@ -41,7 +41,11 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import { ThemeProvider } from "@/components/theme-provider"
-import { Bell, Settings, ChevronDown, ShieldCheck, UserCog, Users, User, Sun, Moon, LayoutDashboard, Clock, CalendarDays, UserCircle2, BarChart3 } from "lucide-react"
+import {
+  Bell, Settings, ChevronDown, ShieldCheck, UserCog, Users, User, Sun, Moon, Menu,
+  LayoutDashboard, Clock, CalendarDays, BarChart3, X, Building2, FileText,
+  CreditCard, Award, TrendingUp, GitBranch, Star,
+} from "lucide-react"
 import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -90,11 +94,7 @@ function ThemeToggle() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="relative hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"
-        >
+        <Button variant="ghost" size="sm" className="relative hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">
           <Sun className="h-4 w-4 text-slate-600 dark:text-slate-400 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
           <Moon className="absolute h-4 w-4 text-slate-600 dark:text-slate-400 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
         </Button>
@@ -108,6 +108,140 @@ function ThemeToggle() {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
+  )
+}
+
+function MobileNav({
+  activeModule,
+  onNavigate,
+}: {
+  activeModule: ActiveModule
+  onNavigate: (module: string) => void
+}) {
+  const [open, setOpen] = useState(false)
+
+  const navGroups = [
+    {
+      label: "Overview",
+      items: [
+        { id: "dashboard", label: "Org Insights", icon: LayoutDashboard },
+        { id: "company-feed", label: "Company Feed", icon: Bell },
+        { id: "analytics", label: "Analytics", icon: BarChart3 },
+      ],
+    },
+    {
+      label: "People",
+      items: [
+        { id: "employees", label: "Employees", icon: Users },
+        { id: "departments", label: "Departments", icon: Building2 },
+        { id: "org-chart", label: "Org Chart", icon: GitBranch },
+      ],
+    },
+    {
+      label: "Talent",
+      items: [
+        { id: "ats", label: "ATS / Recruitment", icon: UserCog },
+        { id: "onboarding", label: "Onboarding", icon: User },
+        { id: "offboarding", label: "Offboarding", icon: User },
+        { id: "career", label: "Career Development", icon: TrendingUp },
+      ],
+    },
+    {
+      label: "Work",
+      items: [
+        { id: "performance", label: "Performance", icon: Star },
+        { id: "learning", label: "Learning & Dev", icon: Award },
+        { id: "workforce-planning", label: "Workforce Planning", icon: Users },
+        { id: "attendance", label: "Attendance", icon: Clock },
+        { id: "leave", label: "Leave", icon: CalendarDays },
+      ],
+    },
+    {
+      label: "Compensation",
+      items: [
+        { id: "payroll", label: "Payroll", icon: CreditCard },
+        { id: "compensation", label: "Compensation", icon: TrendingUp },
+        { id: "benefits", label: "Benefits", icon: Award },
+      ],
+    },
+    {
+      label: "Culture & Admin",
+      items: [
+        { id: "surveys", label: "Surveys", icon: FileText },
+        { id: "recognition", label: "Recognition", icon: Star },
+        { id: "status-changes", label: "Status Changes", icon: GitBranch },
+        { id: "workflow-maker", label: "Workflows", icon: Settings },
+        { id: "documents", label: "Documents", icon: FileText },
+        { id: "letters", label: "HR Letters", icon: FileText },
+        { id: "self-service", label: "Self Service", icon: User },
+        { id: "settings", label: "Settings", icon: Settings },
+      ],
+    },
+  ]
+
+  const handleNav = (id: string) => {
+    onNavigate(id)
+    setOpen(false)
+  }
+
+  return (
+    <>
+      <button
+        onClick={() => setOpen(true)}
+        className="md:hidden flex items-center justify-center h-10 w-10 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+        aria-label="Open navigation"
+        type="button"
+      >
+        <Menu className="h-5 w-5 text-slate-700 dark:text-slate-300" />
+      </button>
+
+      {open && (
+        <div className="fixed inset-0 z-[9999] bg-white dark:bg-slate-900 overflow-y-auto md:hidden">
+          <div className="sticky top-0 flex items-center justify-between px-5 py-4 border-b border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 z-10">
+            <span className="text-lg font-bold text-slate-900 dark:text-slate-100">Navigation</span>
+            <button
+              onClick={() => setOpen(false)}
+              className="flex items-center justify-center h-10 w-10 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+              aria-label="Close navigation"
+              type="button"
+            >
+              <X className="h-5 w-5 text-slate-700 dark:text-slate-300" />
+            </button>
+          </div>
+          <div className="px-4 py-4 space-y-6 pb-12">
+            {navGroups.map((group) => (
+              <div key={group.label}>
+                <p className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-2 px-2">
+                  {group.label}
+                </p>
+                <div className="space-y-1">
+                  {group.items.map((item) => {
+                    const Icon = item.icon
+                    const isActive = activeModule === (item.id as ActiveModule)
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        onClick={() => handleNav(item.id)}
+                        className={
+                          "w-full flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-colors " +
+                          (isActive
+                            ? "bg-primary text-white"
+                            : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800")
+                        }
+                      >
+                        <Icon className="h-5 w-5 flex-shrink-0" />
+                        {item.label}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </>
   )
 }
 
@@ -247,7 +381,8 @@ export default function HRISApp() {
           <HRISSidebar onNavigate={handleNavigate} activeModule={activeModule} userRole={userRole} />
           <SidebarInset className="flex-1 flex flex-col">
             <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-2 border-b border-slate-200/50 dark:border-slate-700/50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl px-4">
-              <SidebarTrigger className="-ml-1 h-10 w-10 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center justify-center shadow-sm" />
+              <SidebarTrigger className="-ml-1 h-9 w-9 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors hidden md:flex items-center justify-center" />
+              <MobileNav activeModule={activeModule} onNavigate={handleNavigate} />
               <Separator orientation="vertical" className="mr-2 h-4 bg-slate-300 dark:bg-slate-600" />
               <Breadcrumb>
                 <BreadcrumbList>
@@ -273,7 +408,6 @@ export default function HRISApp() {
               </Breadcrumb>
 
               <div className="ml-auto flex items-center gap-2">
-                {/* Role Switcher */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button
@@ -329,11 +463,7 @@ export default function HRISApp() {
 
                 <ThemeToggle />
 
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="relative hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"
-                >
+                <Button variant="ghost" size="sm" className="relative hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">
                   <Bell className="h-4 w-4 text-slate-600 dark:text-slate-400" />
                   <Badge className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-secondary text-white text-xs p-0 flex items-center justify-center">
                     3
@@ -350,36 +480,9 @@ export default function HRISApp() {
               </div>
             </header>
 
-            <main className="flex-1 overflow-auto pb-16 md:pb-0">
+            <main className="flex-1 overflow-auto">
               <div className="p-6">{renderActiveModule()}</div>
             </main>
-
-            {/* ── Mobile Bottom Navigation ──────────────────────────────── */}
-            <nav className="fixed bottom-0 left-0 right-0 z-50 flex md:hidden border-t border-slate-200 dark:border-slate-700 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl">
-              {[
-                { icon: LayoutDashboard, label: "Home",       module: "dashboard"  },
-                { icon: Users,           label: "People",     module: "employees"  },
-                { icon: Clock,           label: "Attendance", module: "attendance" },
-                { icon: CalendarDays,    label: "Leave",      module: "leave"      },
-                { icon: BarChart3,       label: "Analytics",  module: "analytics"  },
-              ].map(({ icon: Icon, label, module }) => (
-                <button
-                  key={module}
-                  onClick={() => setActiveModule(module as any)}
-                  className={`flex-1 flex flex-col items-center justify-center gap-0.5 py-2 text-xs font-medium transition-colors ${
-                    activeModule === module
-                      ? "text-teal-600 dark:text-teal-400"
-                      : "text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200"
-                  }`}
-                >
-                  <Icon className="w-5 h-5" />
-                  <span>{label}</span>
-                  {activeModule === module && (
-                    <span className="absolute top-0 w-8 h-0.5 rounded-full bg-teal-500" />
-                  )}
-                </button>
-              ))}
-            </nav>
           </SidebarInset>
         </div>
       </SidebarProvider>
