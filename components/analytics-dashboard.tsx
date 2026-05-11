@@ -135,7 +135,7 @@ export function AnalyticsDashboard() {
     setForm({ ...emptyForm }); setShowForm(false)
   }
   const handleEdit = (r: ScheduledReport) => {
-    setForm({ name: r.name, type: r.type, format: r.format, recipients: r.recipients, frequency: r.frequency, dayOfWeek: r.dayOfWeek, dayOfMonth: r.dayOfMonth, time: r.time, enabled: r.enabled })
+    setForm({ name: r.name, type: r.type, format: r.format, recipients: r.recipients, frequency: r.frequency, dayOfWeek: r.dayOfWeek ?? "", dayOfMonth: r.dayOfMonth ?? "", time: r.time, enabled: r.enabled })
     setEditId(r.id); setShowForm(true)
   }
   const handleDelete = (id: number) => { setSchedules(s => s.filter(r => r.id !== id)); setDeleteConfirm(null) }

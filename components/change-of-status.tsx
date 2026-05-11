@@ -34,6 +34,7 @@ import {
   BarChart3,
   Users,
   Calendar,
+  X,
 } from "lucide-react"
 
 type ChangeType =
